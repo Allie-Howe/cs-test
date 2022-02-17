@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="window.js"></script>
+    <script src="mouse.js"></script>
+    <script src="canvas.js"></script>
+    <script>
+        function clear() {
+            ctx.clearRect(0, 0, cw, ch);
+        }
+        function touchClear() {
+            window.ontouchstart = clear;
+        }
+        // this is here because all my js was being cached forever and i aint got no version control okay?
+        var hue;
+        function linee(width) {
+            ctx.lineCap = "round";
+            ctx.lineJoin = "miter";
+            ctx.lineWidth = width || 2;
+            ctx.beginPath();
+            for (var i = 64; i > 0; i--) {
+                ctx.moveTo(Mouse.xA[i - 1], Mouse.yA[i - 1]);
+                ctx.lineTo(Mouse.xA[i], Mouse.yA[i]);
+                var a = (Mouse.xA[i] - Mouse.xA[i - 1]) || 1;
+                var b = (Mouse.yA[i] - Mouse.yA[i - 1]) || 1;
+                hue = (-time / 9) + (i * 2) + (hypotenuse(a, b) * 6) + aRandomNumber;
+                ctx.strokeStyle = hsla(hue, 100, 50, 1);
+                ctx.lineWidth = Math.max(width - (hypotenuse(a, b) / 2), 2);
+                ctx.stroke();
+                ctx.beginPath();
+            }
+        }
+
+        function animloop() {
+            window.requestAnimFrame(animloop);
+            imageSmoothing(false);
+            timer();
+
+            if (Mouse.clicks % 2 == 1) {
+                decay2(0, 0, 2, 0);
+                decay2(0, 0, -8, Math.PI + Mouse.clicks)
+            } else {
+                decay2(0, 0, 2, 0);
+                decay2(0, 0, -32, Math.PI + Mouse.clicks + 1)
+            }
+
+            if ((Mouse.x <= 20 && Mouse.y <= 20)  /*top left*/ ||
+                (Mouse.x >= cw - 20 && Mouse.y <= 20)  /*top right*/ ||
+                (Mouse.x >= cw - 20 && Mouse.y >= ch - 20)  /*bottom right*/ ||
+                (Mouse.x <= 20 && Mouse.y >= ch - 20)  /* bottom left*/) {
+                clearCanvas(0.1);
+            }
+
+            if (Mouse.x !== -1 && Mouse.y !== -1) {
+                linee(12);
+            }
+        }
+        animloop();
+    </script>
+    <script>
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-3889624-4']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+</body>
+
+</html>
