@@ -17,15 +17,15 @@ var pos = [],
   Mouse = window.Mouse;
 
 Mouse = {
-  x: -1, 
-  y: -1, 
-  xA: [cw / 2], 
-  yA: [ch / 2], 
-  xDown: -1, 
-  xUp: -1, 
+  x: -1,
+  y: -1,
+  xA: [cw / 2],
+  yA: [ch / 2],
+  xDown: -1,
+  xUp: -1,
   yDown: -1,
   yUp: -1,
-  up: true, 
+  up: true,
   clicks: 0
 };
 
@@ -53,7 +53,7 @@ Mouse.avg = function (a, followSpeed, x, y) {
 
   //if (!Array.isArray(pos[a])) {pos[a] = [Mouse.x, Mouse.y]; }
   if(!Array.isArray(pos[a])) pos[a] = [Mouse.x,Mouse.y];
-  
+
   if (x > pos[a][0]) {
     pos[a][0] += (x - pos[a][0]) / followSpeed;
   } else if (x < pos[a][0]) {
@@ -86,15 +86,15 @@ Mouse.events.down = function (e) {
   }
   Mouse.down = true;
   Mouse.up = false;
-  Mouse.clicks += 1;
+  variables.changeOnClick && (Mouse.clicks++);
   Mouse.xDown = Mouse.x;
-  Mouse.yDown = Mouse.y  
+  Mouse.yDown = Mouse.y
   Mouse.xUp = Mouse.x;
   Mouse.yUp = Mouse.y;
 };
 
 function smoothMouse() {
-  if (Mouse.x !== -1 && Mouse.y !== -1) 
+  if (Mouse.x !== -1 && Mouse.y !== -1)
   {  Mouse.avg(0, 2, Mouse.x, Mouse.y);
     for (var i = 1; i <= 64; i++) {
       Mouse.avg(i, 2, Mouse.xA[i - 1], Mouse.yA[i - 1]);
@@ -113,4 +113,3 @@ document.addEventListener("mousedown", Mouse.events.down);
 document.addEventListener("touchstart", Mouse.events.down);
 document.addEventListener("touchend", Mouse.events.up);
 document.addEventListener("mouseup", Mouse.events.up);
-

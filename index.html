@@ -11,17 +11,16 @@
 
 <body>
     <canvas id="canvas"></canvas>
+    <script src="dat.gui.min.js"></script>
     <script src="window.js"></script>
     <script src="mouse.js"></script>
     <script src="canvas.js"></script>
     <script>
-        function clear() {
-            ctx.clearRect(0, 0, cw, ch);
+        var variables = {
+            colourShift: 9,
+            smoothing: false,
+            changeOnClick: false
         }
-        function touchClear() {
-            window.ontouchstart = clear;
-        }
-        // this is here because all my js was being cached forever and i aint got no version control okay?
         var hue;
         function linee(width) {
             ctx.lineCap = "round";
@@ -33,7 +32,7 @@
                 ctx.lineTo(Mouse.xA[i], Mouse.yA[i]);
                 var a = (Mouse.xA[i] - Mouse.xA[i - 1]) || 1;
                 var b = (Mouse.yA[i] - Mouse.yA[i - 1]) || 1;
-                hue = (-time / 9) + (i * 2) + (hypotenuse(a, b) * 6) + aRandomNumber;
+                hue = (-time / variables.colourShift) + (i * 2) + (hypotenuse(a, b) * 6) + aRandomNumber;
                 ctx.strokeStyle = hsla(hue, 100, 50, 1);
                 ctx.lineWidth = Math.max(width - (hypotenuse(a, b) / 2), 2);
                 ctx.stroke();
@@ -43,15 +42,15 @@
 
         function animloop() {
             window.requestAnimFrame(animloop);
-            imageSmoothing(false);
+            imageSmoothing(variables.smoothing);
             timer();
 
             if (Mouse.clicks % 2 == 1) {
-                decay2(0, 0, 2, 0);
-                decay2(0, 0, -8, Math.PI + Mouse.clicks)
+                decay(0, 0, 2, 0);
+                decay(0, 0, -8, Math.PI + Mouse.clicks)
             } else {
-                decay2(0, 0, 2, 0);
-                decay2(0, 0, -32, Math.PI + Mouse.clicks + 1)
+                decay(0, 0, 2, 0);
+                decay(0, 0, -32, Math.PI + Mouse.clicks + 1)
             }
 
             if ((Mouse.x <= 20 && Mouse.y <= 20)  /*top left*/ ||
@@ -79,6 +78,12 @@
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(ga, s);
         })();
+    </script>
+    <script>
+        let gui = new dat.GUI();
+        gui.add(variables, "colourShift", 0, 9);
+        gui.add(variables, "smoothing", true, false);
+        gui.add(variables, "changeOnClick", true, false);
     </script>
 </body>
 
